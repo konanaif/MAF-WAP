@@ -1,0 +1,102 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Mitigation result</title>
+	<link rel="stylesheet" href="{% static 'style/biaschart.css' %}">
+	<link rel="stylesheet" href="{% static 'style/dlchart.css' %}">
+</head>
+<body>
+
+	<h1>Mitigation results</h1>
+
+	<h2>Original data metrics</h2>
+	<p>Number of positives: {{odm.num_positive}}</p>
+	<p>Number of negatives: {{odm.num_negative}}</p>
+	<p>Base rate: {{odm.base_rate}}</p>
+	<p>Disparate impact: {{odm.disparate_impact}}</p>
+	<p>Statistical parity difference: {{odm.statistical_parity_difference}}</p>
+
+	<h2>Transformed data metrics</h2>
+	<p>Number of positives: {{tdm.num_positive}}</p>
+	<p>Number of negatives: {{tdm.num_negative}}</p>
+	<p>Base rate: {{tdm.base_rate}}</p>
+	<p>Disparate impact: {{tdm.disparate_impact}}</p>
+	<p>Statistical parity difference: {{tdm.statistical_parity_difference}}</p>
+
+	<h2>Original classification metrics</h2>
+	<p>Error rate: {{ocm.error_rate}}</p>
+	<p>Average odds difference: {{ocm.average_odds_difference}}</p>
+	<p>Average absolute odds difference: {{ocm.average_abs_odds_difference}}</p>
+	<p>Selection rate: {{ocm.selection_rate}}</p>
+	<p>Disparate impact: {{ocm.disparate_impact}}</p>
+	<p>Statistical parity difference: {{ocm.statistical_parity_difference}}</p>
+	<p>Generalized entropy index: {{ocm.generalized_entropy_index}}</p>
+	<p>Theil index: {{ocm.theil_index}}</p>
+
+	<h2>Transformed classification metrics</h2>
+	<p>Error rate: {{tcm.error_rate}}</p>
+	<p>Average odds difference: {{tcm.average_odds_difference}}</p>
+	<p>Average absolute odds difference: {{tcm.average_abs_odds_difference}}</p>
+	<p>Selection rate: {{tcm.selection_rate}}</p>
+	<p>Disparate impact: {{tcm.disparate_impact}}</p>
+	<p>Statistical parity difference: {{tcm.statistical_parity_difference}}</p>
+	<p>Generalized entropy index: {{tcm.generalized_entropy_index}}</p>
+	<p>Theil index: {{tcm.theil_index}}</p>
+
+
+<!-- Bias Chart Area -->
+	<figure class="highcharts-figure">
+		<div id="bar_container" class="bar"></div>
+		<div id="bar3d_container" class="bar3d"></div>
+		<div id="spider_container" class="spider"></div>
+	</figure>
+
+<!-- Bias Chart Script -->
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/highcharts-3d.js"></script>
+	<script src="https://code.highcharts.com/highcharts-more.js"></script>
+	<script src="{% static 'src/bias_chart.js' %}"></script>
+
+<!-- Resource Script -->
+	<script>
+		const bias_data = {
+			value1: [
+				{{ocm.statistical_parity_difference}},
+				{{ocm.disparate_impact}},
+				{{ocm.equal_opportunity_difference}},
+				{{ocm.average_odds_difference}},
+				{{ocm.theil_index}}
+			],
+			value2: [
+				{{tcm.statistical_parity_difference}},
+				{{tcm.disparate_impact}},
+				{{tcm.equal_opportunity_difference}},
+				{{tcm.average_odds_difference}},
+				{{tcm.theil_index}}
+			]
+		}
+
+		// Bar Bias_chart
+		const bar = new BarChart('bar_container');
+		bar.push(bias_data.value1, {color: "#FF0000bb", name: "original"});
+		bar.push(bias_data.value2, {name: "mitigated"});
+		bar.show();
+
+		// 3D Bar Bias_chart
+		const bar3d = new BarChart3D('bar3d_container');
+		bar3d.push(bias_data.value1, {color: "#FF0000bb", name: "original"});
+		bar3d.push(bias_data.value2, {name: "mitigated"});
+		bar3d.show();
+
+		// Spider Web Bias_chart
+		const spider = new SpiderWebChart('spider_container');
+		spider.push(bias_data.value1, {color: "#FF0000bb", name: "original"});
+		spider.push(bias_data.value2, {name: "mitigated"});
+		spider.show();
+	</script>
+
+</body>
+</html>

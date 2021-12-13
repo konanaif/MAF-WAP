@@ -1,0 +1,63 @@
+{% extends "index_base.html" %}
+
+{% block title %}
+<title>Raw</title>
+{% endblock title %}
+
+{% block data_preset %}
+<form action="{% url 'raw:upload' %}" method="post" enctype="multipart/form-data">
+	{% csrf_token %}
+	{{ message }}
+	<p>{{ form.non_field_erros }}</p>
+	<p>{{ form.file.label_tag }}</p>
+	<p>
+		{{ form.file.errors }}
+		{{ form.file }}
+	</p>
+	<label for="config_data">Configure:</label>
+	<textarea id="config_data" name="config_data" rows="10" cols="150">
+{
+	"sep": ",",
+	"header": 0,
+	"names": null
+}		
+	</textarea>
+	<p><input type="submit" name="Upload"></p>
+</form>
+{% endblock data_preset %}
+
+{% block load_preset %}
+<form action='{% url "raw:load" %}' method='post' enctype="multipart/form-data">
+	{% csrf_token %}
+	{% if data_list %}
+		<h3>Data selection</h3>
+			{% for f in data_list %}
+				{% if f.aif_input_file_path %}
+					<input type="checkbox" id={{f.id}} name=index value="{{f.id}}">
+					<label for=index>(Analyzed) {{ f.datafile.name }}</label><br>
+				{% else %}
+					<input type="checkbox" id={{f.id}} name=index value="{{f.id}}">
+					<label for=index>{{ f.datafile.name }}</label><br>
+				{% endif %}
+			{% endfor %}
+		<h3>Required options</h3>
+		<p>NOTE: These options will be read as JSON form.</p>
+		<label for="config_load">Configure:</label>
+		<textarea id="config_load" name="config_load" rows="15" cols="150">
+{
+	"label_name": "credit.policy",
+	"favorable_classes": [1],
+	"protected_attribute_names": ["pub.rec"],
+	"privileged_classes": [[1]],
+	"unprivileged_classes": [[0]],
+	"features_to_drop": [],
+	"na_values": ["?"],
+	"categorical_features": ["purpose"]
+}
+		</textarea><br>
+    {% else %}
+	    <p>No files.</p>
+    {% endif %}
+	<p><input type='submit' value='Load'/></p>
+</form>
+{% endblock load_preset %}

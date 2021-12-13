@@ -1,0 +1,17 @@
+{% extends "index_base.html" %}
+
+{% block title %}
+<title>New algorithms</title>
+{% endblock title %}
+
+{% block data_preset %}
+<p>
+<a href="{% url 'new:fVAE' %}">Fairness VAE</a>
+<br>
+<a href="{% url 'new:FFD' %}">Fair Feature Distillation</a>
+<br>
+<a href="{% url 'new:LfF' %}">Learning from Failure</a>
+<br>
+<a href="{% url 'new:KDE' %}">Kernel Density Estimation</a>
+</p>
+{% endblock data_preset %}

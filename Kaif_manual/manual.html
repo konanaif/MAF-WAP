@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+	table {
+	  font-family: arial, sans-serif;
+	  border-collapse: collapse;
+	  width: 100%;
+	}
+
+	td, th {
+	  border: 1px solid #dddddd;
+	  text-align: left;
+	  padding: 8px;
+	}
+
+	tr:nth-child(even) {
+	  background-color: #dddddd;
+	}
+	</style>
+	<script type="text/x-mathjax-config">
+        MathJax.Hub.Config({            
+            tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}            
+        });
+    </script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+<h1>Kaif</h1>
+<p>Kaif manual</p>
+
+<h2>Requirements</h2>
+<ul>
+	<li>Linux 실행 환경</li>
+	<li>Python 3.8.5 이상</li>
+	<li>Libraries
+		<ul>
+			<li>aif360 >= 0.4.0</li>
+			<li>celery >= 5.1.2</li>
+			<li>Django >= 3.2.3</li>
+			<li>gensim >= 3.8.3</li>
+			<li>konlpy >= 0.5.2</li>
+			<li>numpy >= 1.19.2</li>
+			<li>pandas >= 1.1.3</li>
+			<li>Pillow >= 8.4.0</li>
+			<li>scipy >= 1.5.3</li>
+			<li>sklearn >= 0.0</li>
+			<li>tensorflow >= 2.4.1</li>
+			<li>torch >= 1.9.0</li>
+			<li>tqdm >= 4.51.0</li>
+			<li>visdom >= 0.1.8.9</li>
+			<li>Wand >= 0.6.7</li>
+		</ul>
+	</li>
+</ul>
+
+<h2>서버 실행</h2>
+<p>Kaif는 Django 프레임워크 기반으로 개발된 Web application</p>
+<img src="kaif_1.jpg" alt="Kaif 서버 디렉토리 구조">
+<p>Root 디렉토리(manage.py가 있는 디렉토리)에서 Django 서버 실행 커맨드 입력</p>
+<p><code>$ python manage.py runserver</code></p>
+<img src="kaif_2.jpg" alt="Kaif Django 서버 실행 화면">
+
+<h2>첫 화면</h2>
+<img src="kaif_3.jpg" alt="Kaif 첫 화면">
+
+<h2>데이터 업로드</h2>
+<img src="kaif_4.jpg" alt="데이터 업로드 화면">
+
+<h3>파일 로딩 옵션: Raw, Text</h3>
+<ul>
+	<li>업로드 가능 파일: csv</li>
+	<li>옵션<br>
+		<table>
+			<tr>
+				<th>파라미터</th>
+				<th>자료형</th>
+				<th>설명</th>
+			</tr>
+			<tr>
+				<td>sep</td>
+				<td>char</td>
+				<td>구분자 문자</td>
+			</tr>
+			<tr>
+				<td>header</td>
+				<td>int</td>
+				<td>헤더 행 번호</td>
+			</tr>
+			<tr>
+				<td>names</td>
+				<td>list[str, ...]</td>
+				<td>열 이름 지정</td>
+			</tr>
+		</table>
+	</li>
+</ul>
+<h3>파일 로딩 옵션: Image</h3>
+<ul>
+	<li>업로드 가능 파일: zip (csv + image directory 포함)</li>
+	<li>옵션<br>
+		<table>
+			<tr>
+				<th>파라미터</th>
+				<th>자료형</th>
+				<th>설명</th>
+			</tr>
+			<tr>
+				<td>labelFileName</td>
+				<td>string</td>
+				<td>이미지 속성 파일명 (csv)</td>
+			</tr>
+			<tr>
+				<td>imageDirName</td>
+				<td>string</td>
+				<td>이미지 디렉토리명</td>
+			</tr>
+			<tr>
+				<td>keyForm</td>
+				<td>filename or basename</td>
+				<td>이미지-속성 맵핑 규칙</td>
+			</tr>
+			<tr>
+				<td>keyColumn</td>
+				<td>string</td>
+				<td>이미지-속성 맵핑 열 이름</td>
+			</tr>
+			<tr>
+				<td>sep</td>
+				<td>string</td>
+				<td>속성 파일 구분자</td>
+			</tr>
+			<tr>
+				<td>header</td>
+				<td>int</td>
+				<td>속성 파일 헤더 행 번호</td>
+			</tr>
+		</table>
+	</li>
+</ul>
+<h3>파일 로딩 옵션: Audio</h3>
+<ul>
+	<li>업로드 가능 파일: zip (csv + audio directory 포함)</li>
+	<li>옵션<br>
+		<table>
+			<tr>
+				<th>파라미터</th>
+				<th>자료형</th>
+				<th>설명</th>
+			</tr>
+			<tr>
+				<td>labelFileName</td>
+				<td>string</td>
+				<td>오디오 속성 파일명 (csv)</td>
+			</tr>
+			<tr>
+				<td>audioDirName</td>
+				<td>string</td>
+				<td>오디오 디렉토리명</td>
+			</tr>
+			<tr>
+				<td>keyForm</td>
+				<td>filename or basename</td>
+				<td>오디오-속성 맵핑 규칙</td>
+			</tr>
+			<tr>
+				<td>keyColumn</td>
+				<td>string</td>
+				<td>오디오-속성 맵핑 열 이름</td>
+			</tr>
+			<tr>
+				<td>sep</td>
+				<td>string</td>
+				<td>속성 파일 구분자</td>
+			</tr>
+			<tr>
+				<td>header</td>
+				<td>int</td>
+				<td>속성 파일 헤더 행 번호</td>
+			</tr>
+		</table>
+	</li>
+</ul>
+
+<h2>분석 데이터 선택</h2>
+<ul>
+	<li>업로드된 데이터 중에서 분석에 활용할 데이터만 선택 (체크박스)</li>
+	<li>이미 분석된 데이터는 (Analyzed)로 표시됨</li>
+</ul>
+<img src="kaif_5.jpg" alt="분석 데이터 선택 화면">
+
+<h2>데이터 로딩 옵션</h2>
+<p>
+	분석용 데이터를 분석하기 위한 옵션<br>
+	(참고: <a href="https://aif360.readthedocs.io/en/latest/modules/generated/aif360.datasets.StandardDataset.html#aif360.datasets.StandardDataset">aif360.datasets.StandardDataset</a>)
+</p>
+<img src="kaif_6.jpg" alt="데이터 로딩 옵션 설정 화면">
+<table>
+	<tr>
+		<th>파라미터</th>
+		<th>자료형</th>
+		<th>설명</th>
+	</tr>
+	<tr>
+		<td>label_name</td>
+		<td>string</td>
+		<td>Target 열 이름</td>
+	</tr>
+	<tr>
+		<td>favorable_classes</td>
+		<td>list[val, ...]</td>
+		<td>Target 값 중에 선호하는 값들</td>
+	</tr>
+	<tr>
+		<td>protected_attribute_names</td>
+		<td>list[str, ...]</td>
+		<td>편향성 정보 열 이름</td>
+	</tr>
+	<tr>
+		<td>privileged_classes</td>
+		<td>list[list, ...]</td>
+		<td>편향성을 나타내는 열과 해당 열에서 선호하는 값 정보</td>
+	</tr>
+	<tr>
+		<td>unprivileged_classes</td>
+		<td>list[list, ...]</td>
+		<td>편향성을 나타내는 열과 해당 열에서 비선호하는 값 정보</td>
+	</tr>
+	<tr>
+		<td>features_to_drop</td>
+		<td>list[str, ...]</td>
+		<td>분석에서 제외할 열 이름</td>
+	</tr>
+	<tr>
+		<td>na_values</td>
+		<td>list[str, ...]</td>
+		<td>Null 값을 변환하기 위한 값</td>
+	</tr>
+	<tr>
+		<td>categorical_features</td>
+		<td>list[str, ...]</td>
+		<td>범주형 값을 가진 열 이름 목록</td>
+	</tr>
+</table>
+
+<h2>데이터 로딩 완료</h2>
+<p>데이터 로딩이 완료되면, 기본적인 데이터 정보가 표시됨</p>
+<ul>
+	<li>Number of classes: 분류 부류 종류</li>
+	<li>Number of intersects: bias * classes</li>
+</ul>
+<img src="kaif_7.jpg" alt="데이터 확인 화면">
+
+<h2>데이터 편향성 측정값</h2>
+<img src="kaif_8.jpg" alt="데이터 편향성 측정값 확인 화면">
+<h3>데이터 편향성 측정값 상세</h3>
+<table>
+	<tr>
+		<th>값</th>
+		<th>설명</th>
+	</tr>
+	<tr>
+		<td>Number of positives</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>Number of negatives</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>Base rate</td>
+		<td>$Pr(Y = 1) = \frac{P}{P + N}$</td>
+	</tr>
+	<tr>
+		<td>Disparate impact</td>
+		<td>$ \frac{Pr(Y = 1 | D = \text{unprivileged})}{Pr(Y = 1 | D = \text{privileged})}$</td>
+	</tr>
+	<tr>
+		<td>Statistical parity differnece</td>
+		<td>$Pr(Y = 1 | D = \text{unprivileged}) - Pr(Y = 1 | D = \text{privileged})$</td>
+	</tr>
+</table>
+
+<h2>편향성 완화 결과 확인</h2>
+<img src="kaif_9.jpg" alt="편향성 완화 결과 확인 화면">
+<h3>분류 결과 편향성 측정값 상세</h3>
+<p>참고: <a href="https://aif360.readthedocs.io/en/latest/modules/generated/aif360.metrics.ClassificationMetric.html#aif360.metrics.ClassificationMetric">aif360.metrics.ClassificationMetric</a></p>
+<table>
+	<tr>
+		<th>값</th>
+		<th>설명</th>
+	</tr>
+	<tr>
+		<td>Error rate</td>
+		<td>$ERR = \frac{FP + FN}{P + N}$</td>
+	</tr>
+	<tr>
+		<td>Average odds difference</td>
+		<td>$\tfrac{1}{2}\left[(FPR_{D = \text{unprivileged}} - FPR_{D = \text{privileged}})+ (TPR_{D = \text{unprivileged}} - TPR_{D = \text{privileged}}))\right]$</td>
+	</tr>
+	<tr>
+		<td>Average absolute odds difference</td>
+		<td>$\tfrac{1}{2}\left[|FPR_{D = \text{unprivileged}} - FPR_{D = \text{privileged}}| + |TPR_{D = \text{unprivileged}} - TPR_{D = \text{privileged}}|\right]$</td>
+	</tr>
+	<tr>
+		<td>Selection rate</td>
+		<td>$Pr(\hat{Y} = \text{favorable})$</td>
+	</tr>
+	<tr>
+		<td>Disparate impact</td>
+		<td>$\frac{Pr(\hat{Y} = 1 | D = \text{unprivileged})}{Pr(\hat{Y} = 1 | D = \text{privileged})}$</td>
+	</tr>
+	<tr>
+		<td>Statistical parity difference</td>
+		<td>$Pr(\hat{Y} = 1 | D = \text{unprivileged}) - Pr(\hat{Y} = 1 | D = \text{privileged})$</td>
+	</tr>
+	<tr>
+		<td>Generalized entropy index</td>
+		<td>$\mathcal{E}(\alpha) = \begin{cases}
+               \frac{1}{n \alpha (\alpha-1)}\sum_{i=1}^n\left[\left(\frac{b_i}{\mu}\right)^\alpha - 1\right],& \alpha \ne 0, 1,\\
+               \frac{1}{n}\sum_{i=1}^n\frac{b_{i}}{\mu}\ln\frac{b_{i}}{\mu},& \alpha=1,\\
+               -\frac{1}{n}\sum_{i=1}^n\ln\frac{b_{i}}{\mu},& \alpha=0.
+           \end{cases}$</td>
+	</tr>
+	<tr>
+		<td>Theil index</td>
+		<td>Generalized entropy index when $\alpha=1$.</td>
+	</tr>
+</table>
+</body>
+</html>

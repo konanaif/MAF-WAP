@@ -1,0 +1,29 @@
+{% extends "metric_base.html" %}
+
+{% block mitigationReverse %}
+<p>
+	<h2>Preprocessing</h2>
+	<ul>
+		<li><a href='{% url "audio:mitigate" %}?d_id={{d_id}}&m_id=1'>Reweighing</a></li>
+		<li><a href='{% url "audio:mitigate" %}?d_id={{d_id}}&m_id=2'>Disperate Impact Remover</a></li>
+		<li><a href='{% url "audio:mitigate" %}?d_id={{d_id}}&m_id=3'>Learning Fair Representation</a></li>
+	</ul>
+</p>
+<p>
+	<h2>Inprocessing</h2>
+	<ul>
+		<li><a href='{% url "audio:mitigate" %}?d_id={{d_id}}&m_id=4'>Adversarial Debiasing</a></li>
+		<li><a href='{% url "audio:mitigate" %}?d_id={{d_id}}&m_id=5'>Garry Fair Classifier</a></li>
+		<li><a href='{% url "audio:mitigate" %}?d_id={{d_id}}&m_id=6'>Meta Fair Classifier</a></li>
+		<li><a href='{% url "audio:mitigate" %}?d_id={{d_id}}&m_id=7'>Prejudice Remover</a></li>
+	</ul>
+</p>
+<p>
+	<h2>Postprocessing</h2>
+	<ul>
+		<li><a href='{% url "audio:mitigate" %}?d_id={{d_id}}&m_id=8'>Calibrated Equalized Odds</a></li>
+		<li><a href='{% url "audio:mitigate" %}?d_id={{d_id}}&m_id=9'>Equalized Odds</a></li>
+		<li><a href='{% url "audio:mitigate" %}?d_id={{d_id}}&m_id=10'>Reject Option</a></li>
+	</ul>
+</p>
+{% endblock mitigationReverse %}

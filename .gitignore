@@ -1,0 +1,12 @@
+
+*.pyc
+audio/migrations/0001_initial.py
+audio/migrations/__init__.py
+*.jpg
+*.csv
+Kaif_manual/Kaif_manual.zip
+new/migrations/__init__.py
+raw/migrations/0001_initial.py
+raw/migrations/__init__.py
+text/migrations/0001_initial.py
+text/migrations/__init__.py

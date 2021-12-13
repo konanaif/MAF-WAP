@@ -1,0 +1,114 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Mitigation result</title>
+	<link rel="stylesheet" href="{% static 'style/biaschart.css' %}">
+	<link rel="stylesheet" href="{% static 'style/dlchart.css' %}">
+</head>
+<body>
+
+	<h1>Mitigation</h1>
+
+	{% if id %}
+	<p>ID : {{id}}</p>
+	{% else %}
+	<p>No Queue</p>
+	{% endif %}
+
+	{% if result %}
+		<h2>Original data metrics</h2>
+		<p>Number of positives: {{result.odm.num_positive}}</p>
+		<p>Number of negatives: {{result.odm.num_negative}}</p>
+		<p>Base rate: {{result.odm.base_rate}}</p>
+		<p>Disparate impact: {{result.odm.disparate_impact}}</p>
+		<p>Statistical parity difference: {{result.odm.statistical_parity_difference}}</p>
+
+		<h2>Transformed data metrics</h2>
+		<p>Number of positives: {{result.tdm.num_positive}}</p>
+		<p>Number of negatives: {{result.tdm.num_negative}}</p>
+		<p>Base rate: {{result.tdm.base_rate}}</p>
+		<p>Disparate impact: {{result.tdm.disparate_impact}}</p>
+		<p>Statistical parity difference: {{result.tdm.statistical_parity_difference}}</p>
+
+		<h2>Original classification metrics</h2>
+		<p>Error rate: {{result.ocm.error_rate}}</p>
+		<p>Average odds difference: {{result.ocm.average_odds_difference}}</p>
+		<p>Average absolute odds difference: {{result.ocm.average_abs_odds_difference}}</p>
+		<p>Selection rate: {{result.ocm.selection_rate}}</p>
+		<p>Disparate impact: {{result.ocm.disparate_impact}}</p>
+		<p>Statistical parity difference: {{result.ocm.statistical_parity_difference}}</p>
+		<p>Generalized entropy index: {{result.ocm.generalized_entropy_index}}</p>
+		<p>Theil index: {{result.ocm.theil_index}}</p>
+
+		<h2>Transformed classification metrics</h2>
+		<p>Error rate: {{result.tcm.error_rate}}</p>
+		<p>Average odds difference: {{result.tcm.average_odds_difference}}</p>
+		<p>Average absolute odds difference: {{result.tcm.average_abs_odds_difference}}</p>
+		<p>Selection rate: {{result.tcm.selection_rate}}</p>
+		<p>Disparate impact: {{result.tcm.disparate_impact}}</p>
+		<p>Statistical parity difference: {{result.tcm.statistical_parity_difference}}</p>
+		<p>Generalized entropy index: {{result.tcm.generalized_entropy_index}}</p>
+		<p>Theil index: {{result.tcm.theil_index}}</p>
+
+	<!-- Bias Chart Area -->
+		<figure class="highcharts-figure">
+			<div id="bar_container" class="bar"></div>
+			<div id="bar3d_container" class="bar3d"></div>
+			<div id="spider_container" class="spider"></div>
+		</figure>
+
+	<!-- Bias Chart Script -->
+		<script src="https://code.highcharts.com/highcharts.js"></script>
+		<script src="https://code.highcharts.com/highcharts-3d.js"></script>
+		<script src="https://code.highcharts.com/highcharts-more.js"></script>
+		<script src="{% static 'src/bias_chart.js' %}"></script>
+
+	<!-- Resource Script -->
+		<script>
+			const bias_data = {
+				value1: [
+					{{result.ocm.statistical_parity_difference}},
+					{{result.ocm.disparate_impact}},
+					{{result.ocm.equal_opportunity_difference}},
+					{{result.ocm.average_odds_difference}},
+					{{result.ocm.theil_index}}
+				],
+				value2: [
+					{{result.tcm.statistical_parity_difference}},
+					{{result.tcm.disparate_impact}},
+					{{result.tcm.equal_opportunity_difference}},
+					{{result.tcm.average_odds_difference}},
+					{{result.tcm.theil_index}}
+				]
+			}
+
+			// Bar Bias_chart
+			const bar = new BarChart('bar_container');
+			bar.push(bias_data.value1, {color: "#FF0000bb", name: "original"});
+			bar.push(bias_data.value2, {name: "mitigated"});
+			bar.show();
+
+			// 3D Bar Bias_chart
+			const bar3d = new BarChart3D('bar3d_container');
+			bar3d.push(bias_data.value1, {color: "#FF0000bb", name: "original"});
+			bar3d.push(bias_data.value2, {name: "mitigated"});
+			bar3d.show();
+
+			// Spider Web Bias_chart
+			const spider = new SpiderWebChart('spider_container');
+			spider.push(bias_data.value1, {color: "#FF0000bb", name: "original"});
+			spider.push(bias_data.value2, {name: "mitigated"});
+			spider.show();
+		</script>
+	{% else %}
+	<p>
+		Processing...Please wait...<br>
+		<a href="{% url 'new:fVAE_result' %}?id={{id}}">Refresh</a>
+	</p>
+	{% endif %}
+
+</body>
+</html>

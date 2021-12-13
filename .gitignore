@@ -10,3 +10,4 @@ raw/migrations/0001_initial.py
 raw/migrations/__init__.py
 text/migrations/0001_initial.py
 text/migrations/__init__.py
+kaif/settings.py

@@ -21,5 +21,8 @@ urlpatterns = [
     path('LfF/', views.LfF_data, name='LfF'),
     path('LfF/metric', views.LfF_metric, name='LfF_metric'),
     path('LfF/mitigation', views.LfF_mitigation, name='LfF_mitigation'),
-    path('KDE/', views.KDE, name='KDE')
+    path('KDE/', views.KDE, name='KDE'),
+    path('FB/', views.FB_data, name='FB'),
+    path('FB/metric', views.FB_metric, name='FB_metric'),
+    path('FB/mitigation', views.FB_mitigation, name='FB_mitigation'),
 ]

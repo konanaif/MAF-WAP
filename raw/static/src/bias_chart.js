@@ -13,6 +13,11 @@ class Bias_chart {
     }
 
     /**
+     * x축을 재정의하는 메소드.
+     */
+    setAxis(axis) { var x_axis = axis; this.xAxis = x_axis; }
+
+    /**
      * Series에 데이터를 추가하는 메소드. 재정의 필요.
      */
     push(data) { this.series.push(data); }

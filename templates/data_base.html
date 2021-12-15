@@ -1,7 +1,39 @@
-<h1>Data info</h1>
+{% load static %}
 
-<p>Number of classes: {{info.num_classes}}</p>
-<p>Number of intersects: {{info.num_intersects}}</p>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Data information</title>
+	<link rel="stylesheet" href="{% static 'style/biaschart.css' %}">
+</head>
+<body>
 
-{% block metricReverse %}
-{% endblock metricReverse %}
+	<h1>Data info</h1>
+
+	<p>Number of classes: {{info.num_classes}}</p>
+	<p>Number of intersects: {{info.num_intersects}}</p>
+
+	<figure class="highcharts-figure">
+        <div id="scatter" class="scatter"></div>
+    </figure>
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="{% static 'src/bias_chart.js' %}"></script>
+    <script>
+    	const tsne_priv = {{ info.privileged_tsne_data }};
+    	const tsne_unpriv = {{ info.unprivileged_tsne_data }};
+
+    	const scatter = new ScatterChart("scatter", "{{ info.protected_attribute }}");
+    	scatter.push(tsne_priv, {color: "rgba(129, 199, 233, 0.2)", name: "Privileged"});
+    	scatter.push(tsne_unpriv, {color: "rgba(255, 187, 0, 0.2)", name: "Unprivileged"});
+    	scatter.show();
+    </script>
+
+	{% block metricReverse %}
+	{% endblock metricReverse %}
+
+</body>
+</html>

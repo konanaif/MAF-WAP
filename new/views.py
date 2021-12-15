@@ -4,6 +4,7 @@ import numpy as np
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 
+from sklearn.manifold import TSNE
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import MinMaxScaler
 import tensorflow.compat.v1 as tf
@@ -42,10 +43,28 @@ def fVAE_data(request):
 	intersect_groups = np.unique(aif_data.protected_attributes, axis=0)
 	num_intersects = len(intersect_groups)
 
+	## T-SNE
+	model = TSNE(n_components=2)
+
+	# Privileged dataset
+	priv_index = np.where(aif_data.protected_attributes == aif_data.privileged_protected_attributes)[0]
+	priv_dset = aif_data.subset(priv_index)
+
+	# Unprivileged dataset
+	unpriv_index = np.where(aif_data.protected_attributes == aif_data.unprivileged_protected_attributes)[0]
+	unpriv_dset = aif_data.subset(unpriv_index)
+
+	## T-SNE modeling
+	tsne_data_priv = model.fit_transform(priv_dset.features)
+	tsne_data_unpriv = model.fit_transform(unpriv_dset.features)
+
 	data_info = {
 		'num_classes': num_classes,
 		'num_intersects': num_intersects,
-		'intersect_groups': intersect_groups
+		'intersect_groups': intersect_groups,
+		'protected_attribute': aif_data.protected_attribute_names[0],
+		'privileged_tsne_data': tsne_data_priv.tolist(),
+		'unprivileged_tsne_data': tsne_data_unpriv.tolist()
 	}
 
 	context = {'info': data_info, 'algorithm': 'fVAE'}
@@ -68,12 +87,13 @@ def fVAE_metric(request):
 	metric = DataMetric(dataset=aif_data, privilege=[{'Male':-1}], unprivilege=[{'Male':1}])
 
 	context = {
-		'num_positive': metric.num_positive(),
-		'num_negative': metric.num_negative(),
-		'base_rate': metric.base_rate(),
+		'num_positive_list': [metric.num_positive(), metric.num_positive(privileged=True), metric.num_positive(privileged=False)],
+		'num_negative_list': [metric.num_negative(), metric.num_negative(privileged=True), metric.num_negative(privileged=False)],
+		'base_rate_list': [metric.base_rate(), metric.base_rate(privileged=True), metric.base_rate(privileged=False)],
 		'disparate_impact': metric.disparate_impact(),
 		'statistical_parity_difference': metric.statistical_parity_difference(),
 		'data': aif_data,
+		'id': 0,
 		'algorithm': 'fVAE'
 	}
 
@@ -121,10 +141,28 @@ def FFD_data(request):
 	intersect_groups = np.unique(aif_data.protected_attributes, axis=0)
 	num_intersects = len(intersect_groups)
 
+	## T-SNE
+	model = TSNE(n_components=2)
+
+	# Privileged dataset
+	priv_index = np.where(aif_data.protected_attributes == aif_data.privileged_protected_attributes)[0]
+	priv_dset = aif_data.subset(priv_index)
+
+	# Unprivileged dataset
+	unpriv_index = np.where(aif_data.protected_attributes == aif_data.unprivileged_protected_attributes)[0]
+	unpriv_dset = aif_data.subset(unpriv_index)
+
+	## T-SNE modeling
+	tsne_data_priv = model.fit_transform(priv_dset.features)
+	tsne_data_unpriv = model.fit_transform(unpriv_dset.features)
+
 	data_info = {
 		'num_classes': num_classes,
 		'num_intersects': num_intersects,
-		'intersect_groups': intersect_groups
+		'intersect_groups': intersect_groups,
+		'protected_attribute': aif_data.protected_attribute_names[0],
+		'privileged_tsne_data': tsne_data_priv.tolist(),
+		'unprivileged_tsne_data': tsne_data_unpriv.tolist()
 	}
 
 	context = {'info': data_info, 'algorithm': 'FFD'}
@@ -147,12 +185,13 @@ def FFD_metric(request):
 	metric = DataMetric(dataset=aif_data, privilege=[{'base_protected':0}], unprivilege=[{'base_protected':1}, {'base_protected':2}, {'base_protected':3}])
 
 	context = {
-		'num_positive': metric.num_positive(),
-		'num_negative': metric.num_negative(),
-		'base_rate': metric.base_rate(),
+		'num_positive_list': [metric.num_positive(), metric.num_positive(privileged=True), metric.num_positive(privileged=False)],
+		'num_negative_list': [metric.num_negative(), metric.num_negative(privileged=True), metric.num_negative(privileged=False)],
+		'base_rate_list': [metric.base_rate(), metric.base_rate(privileged=True), metric.base_rate(privileged=False)],
 		'disparate_impact': metric.disparate_impact(),
 		'statistical_parity_difference': metric.statistical_parity_difference(),
 		'data': aif_data,
+		'id': 0,
 		'algorithm': 'FFD'
 	}
 
@@ -271,10 +310,28 @@ def LfF_data(request):
 	intersect_groups = np.unique(aif_data.protected_attributes, axis=0)
 	num_intersects = len(intersect_groups)
 
+	## T-SNE
+	model = TSNE(n_components=2)
+
+	# Privileged dataset
+	priv_index = np.where(aif_data.protected_attributes == aif_data.privileged_protected_attributes)[0]
+	priv_dset = aif_data.subset(priv_index)
+
+	# Unprivileged dataset
+	unpriv_index = np.where(aif_data.protected_attributes == aif_data.unprivileged_protected_attributes)[0]
+	unpriv_dset = aif_data.subset(unpriv_index)
+
+	## T-SNE modeling
+	tsne_data_priv = model.fit_transform(priv_dset.features)
+	tsne_data_unpriv = model.fit_transform(unpriv_dset.features)
+
 	data_info = {
 		'num_classes': num_classes,
 		'num_intersects': num_intersects,
-		'intersect_groups': intersect_groups
+		'intersect_groups': intersect_groups,
+		'protected_attribute': aif_data.protected_attribute_names[0],
+		'privileged_tsne_data': tsne_data_priv.tolist(),
+		'unprivileged_tsne_data': tsne_data_unpriv.tolist()
 	}
 
 	context = {'info': data_info, 'algorithm': 'LfF'}
@@ -297,12 +354,13 @@ def LfF_metric(request):
 	metric = DataMetric(dataset=aif_data, privilege=[{'base_protected':1}, {'base_protected':2}, {'base_protected':7}], unprivilege=[{'base_protected':8}, {'base_protected':6}, {'base_protected':5}])
 
 	context = {
-		'num_positive': metric.num_positive(),
-		'num_negative': metric.num_negative(),
-		'base_rate': metric.base_rate(),
+		'num_positive_list': [metric.num_positive(), metric.num_positive(privileged=True), metric.num_positive(privileged=False)],
+		'num_negative_list': [metric.num_negative(), metric.num_negative(privileged=True), metric.num_negative(privileged=False)],
+		'base_rate_list': [metric.base_rate(), metric.base_rate(privileged=True), metric.base_rate(privileged=False)],
 		'disparate_impact': metric.disparate_impact(),
 		'statistical_parity_difference': metric.statistical_parity_difference(),
 		'data': aif_data,
+		'id': 0,
 		'algorithm': 'LfF'
 	}
 

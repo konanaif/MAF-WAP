@@ -1,12 +1,68 @@
-<h1>Metric for {{data.datafile.name}}</h1>
+{% load static %}
 
-<p>Number of positives: {{num_positive}}</p>
-<p>Number of negatives: {{num_negative}}</p>
-<p>Base rate: {{base_rate}}</p>
-<p>Disparate impact: {{disparate_impact}}</p>
-<p>Statistical parity difference: {{statistical_parity_difference}}</p>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Data Metrics</title>
+	<link rel="stylesheet" href="{% static 'style/biaschart.css' %}">
+	<link rel="stylesheet" href="{% static 'style/dlchart.css' %}">
+</head>
+<body>
 
-<br><br>
+	<h1>Metric for {{data.datafile.name}}</h1>
 
-{% block mitigationReverse %}
-{% endblock mitigationReverse %}
+	<p>Number of positives: {{num_positive_list.0}}</p>
+	<p>Number of negatives: {{num_negative_list.0}}</p>
+	<p>Base rate: {{base_rate_list.0}}</p>
+	<p>Disparate impact: {{disparate_impact}}</p>
+	<p>Statistical parity difference: {{statistical_parity_difference}}</p>
+
+	<br><br>
+<!-- Bias Chart Area -->
+	<figure class="highcharts-figure">
+		<div id="pos_neg_container" class="bar"></div>
+		<div id="base_container" class="bar"></div>
+		<div id="metric_container" class="bar"></div>
+	</figure>
+
+<!-- Bias Chart Script -->
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/highcharts-3d.js"></script>
+	<script src="https://code.highcharts.com/highcharts-more.js"></script>
+	<script src="{% static 'src/bias_chart.js' %}"></script>
+
+<!-- Resource Script -->
+	<script>
+
+		const positives = {{ num_positive_list }};
+		const negatives = {{ num_negative_list }};
+
+		const posNegBar = new BarChart("pos_neg_container");
+		posNegBar.xAxis = ["All", "Privileged", "Unprivileged"];
+		posNegBar.push(positives, {color: "#FF0000bb", name: "Positive"});
+		posNegBar.push(negatives, {name: "Negative"});
+		posNegBar.show();
+
+
+		const base_rates = {{ base_rate_list }};
+
+		const baseBar = new BarChart("base_container");
+		baseBar.xAxis = ["All", "Privileged", "Unprivileged"];
+		baseBar.push(base_rates, {name: "Base rate"});
+		baseBar.show();
+
+
+		const metrics = [{{ disparate_impact }}, {{ statistical_parity_difference }}];
+
+		const metricBar = new BarChart("metric_container");
+		metricBar.xAxis = ["Disparate impact", "Statistical parity difference"];
+		metricBar.push(metrics, {name: "Metrics"});
+		metricBar.show();
+	</script>
+
+	{% block mitigationReverse %}
+	{% endblock mitigationReverse %}
+
+</body>
+</html>

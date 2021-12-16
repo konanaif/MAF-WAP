@@ -25,4 +25,7 @@ urlpatterns = [
     path('FB/', views.FB_data, name='FB'),
     path('FB/metric', views.FB_metric, name='FB_metric'),
     path('FB/mitigation', views.FB_mitigation, name='FB_mitigation'),
+    path('CPR/', views.CPR_data, name='CPR'),
+    path('CPR/metric', views.CPR_metric, name='CPR_metric'),
+    path('CPR/mitigation', views.CPR_mitigation, name='CPR_mitigation'),
 ]
